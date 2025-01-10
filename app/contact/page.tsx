@@ -10,13 +10,18 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+  
     try {
       const formData = new FormData(e.currentTarget);
+      const formDataObject = Object.fromEntries(formData.entries());
+      const stringData = Object.fromEntries(
+        Object.entries(formDataObject).map(([key, value]) => [key, String(value)])
+      );
+  
       await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as any).toString(),
+        body: new URLSearchParams(stringData).toString(),
       });
       setSubmitted(true);
       (e.target as HTMLFormElement).reset();
@@ -26,7 +31,7 @@ export default function ContactPage() {
       setIsSubmitting(false);
     }
   };
-
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
@@ -56,7 +61,7 @@ export default function ContactPage() {
                 Thank you for your message!
               </p>
               <p className="text-gray-500 mt-2">
-                We'll get back to you as soon as possible.
+                We&apos;ll get back to you as soon as possible.
               </p>
             </div>
           ) : (
